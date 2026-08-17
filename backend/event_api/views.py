@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.models import User
+from django.db.models import Q
 from django.utils import timezone
 from datetime import timedelta
 
@@ -11,6 +12,10 @@ from .models import Event
 from .serializers import EventSerializer, UserSerializer, RegisterSerializer
 
 class RegisterView(generics.CreateAPIView):
+    """
+    Endpoint for user registration.
+    Returns user details along with SimpleJWT access and refresh tokens.
+    """
     queryset = User.objects.all()
     permission_classes = [AllowAny]
     serializer_class = RegisterSerializer
@@ -20,22 +25,31 @@ class RegisterView(generics.CreateAPIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
 
+        # Generate JWT tokens for immediate login upon registration
         refresh = RefreshToken.for_user(user)
+        headers = self.get_success_headers(serializer.data)
         return Response({
             'user': UserSerializer(user).data,
             'access': str(refresh.access_token),
             'refresh': str(refresh),
             'message': 'Registration successful'
-        }, status=status.HTTP_201_CREATED)
+        }, status=status.HTTP_201_CREATED, headers=headers)
 
 class CurrentUserView(APIView):
+    """
+    Endpoint to retrieve current authenticated user details.
+    """
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
         serializer = UserSerializer(request.user)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class DemoLoginView(APIView):
+    """
+    Endpoint for instant 1-click demo login without credentials.
+    Creates or retrieves demo_user and returns JWT tokens.
+    """
     permission_classes = [AllowAny]
 
     def post(self, request):
@@ -64,6 +78,9 @@ class DemoLoginView(APIView):
         }, status=status.HTTP_200_OK)
 
 class SeedDemoEventsView(APIView):
+    """
+    Endpoint to populate sample countdown events for the authenticated user.
+    """
     permission_classes = [IsAuthenticated]
 
     @staticmethod
@@ -136,21 +153,42 @@ class SeedDemoEventsView(APIView):
         }, status=status.HTTP_201_CREATED)
 
 class EventViewSet(viewsets.ModelViewSet):
+    """
+    CRUD ViewSet for Events owned by the authenticated user.
+    Supports query parameters:
+      - ?category=birthday|trip|exam|...
+      - ?search=query
+      - ?status=active|completed
+      - ?sort=nearest|farthest|newest|title
+    """
     serializer_class = EventSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
+        # Safe check for authenticated user
+        if not self.request.user or not self.request.user.is_authenticated:
+            return Event.objects.none()
+
         queryset = Event.objects.filter(owner=self.request.user)
         
         # Filter by category
         category = self.request.query_params.get('category')
         if category and category != 'all':
             queryset = queryset.filter(category=category)
+
+        # Filter by status (active vs completed)
+        status_param = self.request.query_params.get('status')
+        if status_param == 'active':
+            queryset = queryset.filter(target_date__gte=timezone.now())
+        elif status_param == 'completed':
+            queryset = queryset.filter(target_date__lt=timezone.now())
             
-        # Search query
+        # Search query across title and description using Q objects
         search = self.request.query_params.get('search')
         if search:
-            queryset = queryset.filter(title__icontains=search) | queryset.filter(description__icontains=search)
+            queryset = queryset.filter(
+                Q(title__icontains=search) | Q(description__icontains=search)
+            )
             
         # Sorting
         sort_by = self.request.query_params.get('sort', 'nearest')
