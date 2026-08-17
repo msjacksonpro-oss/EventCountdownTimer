@@ -12,14 +12,14 @@ const StatsOverview = ({ events }) => {
 
   const stats = [
     {
-      label: 'Total Tracked Events',
+      label: 'Total Tracked',
       value: total,
       icon: Calendar,
       color: '#6366f1',
       bg: 'rgba(99, 102, 241, 0.12)',
     },
     {
-      label: 'Active Countdowns',
+      label: 'Active Timers',
       value: activeEvents.length,
       icon: Clock,
       color: '#10b981',
@@ -27,7 +27,7 @@ const StatsOverview = ({ events }) => {
       pulse: activeEvents.length > 0,
     },
     {
-      label: 'Completed Milestones',
+      label: 'Completed',
       value: completedEvents.length,
       icon: CheckCircle2,
       color: '#f59e0b',
@@ -39,62 +39,72 @@ const StatsOverview = ({ events }) => {
       icon: Zap,
       color: '#06b6d4',
       bg: 'rgba(6, 182, 212, 0.12)',
-      subtext: nearest ? nearest.title : 'Add an upcoming event',
+      subtext: nearest ? nearest.title : 'No upcoming events',
     },
   ];
 
   return (
-    <div style={{
-      display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-      gap: '1rem',
-      marginBottom: '2rem'
-    }}>
+    <div className="stats-grid">
       {stats.map((stat, idx) => {
         const Icon = stat.icon;
         return (
           <div
             key={idx}
-            className="glass-panel"
+            className="glass-panel stat-card"
             style={{
               padding: '1.25rem',
               display: 'flex',
               alignItems: 'center',
-              gap: '1rem',
+              gap: '0.85rem',
             }}
           >
-            <div style={{
-              width: '46px',
-              height: '46px',
-              borderRadius: '12px',
-              background: stat.bg,
-              color: stat.color,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexShrink: 0,
-              boxShadow: stat.pulse ? `0 0 12px ${stat.color}44` : 'none'
-            }}>
+            <div
+              className="stat-icon-wrap"
+              style={{
+                width: '46px',
+                height: '46px',
+                borderRadius: '12px',
+                background: stat.bg,
+                color: stat.color,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+                boxShadow: stat.pulse ? `0 0 12px ${stat.color}44` : 'none'
+              }}
+            >
               <Icon size={22} className={stat.pulse ? 'ticking-second' : ''} />
             </div>
 
-            <div style={{ overflow: 'hidden' }}>
-              <div style={{ fontSize: '0.75rem', fontWeight: '600', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+            <div style={{ overflow: 'hidden', minWidth: 0, flex: 1 }}>
+              <div style={{ fontSize: '0.725rem', fontWeight: '600', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.04em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 {stat.label}
               </div>
-              <div style={{
-                fontSize: '1.35rem',
-                fontWeight: '800',
-                color: 'var(--text-primary)',
-                fontFamily: stat.subtext ? 'var(--font-heading)' : 'var(--font-heading)',
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis'
-              }}>
+              <div
+                className="stat-value"
+                style={{
+                  fontSize: '1.35rem',
+                  fontWeight: '800',
+                  color: 'var(--text-primary)',
+                  fontFamily: 'var(--font-heading)',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis'
+                }}
+              >
                 {stat.value}
               </div>
               {stat.subtext && (
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                <div
+                  className="stat-subtext"
+                  style={{
+                    fontSize: '0.725rem',
+                    color: 'var(--text-secondary)',
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis'
+                  }}
+                >
                   {stat.subtext}
                 </div>
               )}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { CATEGORIES, COLOR_PRESETS, formatDateForInput } from '../utils/timeUtils';
-import { X, Calendar, Sparkles, Clock, Palette, Tag } from 'lucide-react';
+import { X, Calendar, Clock, Palette, Tag } from 'lucide-react';
 
 const EventFormModal = ({ isOpen, onClose, onSave, editingEvent }) => {
   const [title, setTitle] = useState('');
@@ -86,10 +86,10 @@ const EventFormModal = ({ isOpen, onClose, onSave, editingEvent }) => {
       <div
         className="modal-container"
         onClick={(e) => e.stopPropagation()}
-        style={{ maxWidth: '620px' }}
+        style={{ maxWidth: '600px' }}
       >
         {/* Modal Header */}
-        <div style={{
+        <div className="modal-header" style={{
           padding: '1.25rem 1.5rem',
           borderBottom: '1px solid var(--border-glass)',
           display: 'flex',
@@ -106,15 +106,16 @@ const EventFormModal = ({ isOpen, onClose, onSave, editingEvent }) => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: '#fff'
+              color: '#fff',
+              flexShrink: 0
             }}>
               <Clock size={20} />
             </div>
             <div>
-              <h3 style={{ fontSize: '1.2rem', fontWeight: '800', color: '#ffffff' }}>
+              <h3 style={{ fontSize: '1.15rem', fontWeight: '800', color: '#ffffff' }}>
                 {editingEvent ? 'Edit Event Countdown' : 'Create New Event'}
               </h3>
-              <p style={{ fontSize: '0.775rem', color: 'var(--text-muted)' }}>
+              <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                 Set your target milestone and watch the live countdown
               </p>
             </div>
@@ -127,7 +128,10 @@ const EventFormModal = ({ isOpen, onClose, onSave, editingEvent }) => {
               background: 'transparent',
               border: 'none',
               color: 'var(--text-muted)',
-              cursor: 'pointer'
+              cursor: 'pointer',
+              width: '32px',
+              height: '32px',
+              minWidth: '32px'
             }}
           >
             <X size={20} />
@@ -135,7 +139,7 @@ const EventFormModal = ({ isOpen, onClose, onSave, editingEvent }) => {
         </div>
 
         {/* Modal Body */}
-        <form onSubmit={handleSubmit} style={{ padding: '1.5rem' }}>
+        <form onSubmit={handleSubmit} className="modal-body" style={{ padding: '1.5rem' }}>
           {error && (
             <div style={{
               background: 'rgba(239, 68, 68, 0.15)',
@@ -171,11 +175,14 @@ const EventFormModal = ({ isOpen, onClose, onSave, editingEvent }) => {
               <Tag size={15} />
               <span>Category</span>
             </label>
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))',
-              gap: '0.5rem'
-            }}>
+            <div
+              className="category-preset-grid"
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))',
+                gap: '0.45rem'
+              }}
+            >
               {Object.entries(CATEGORIES).map(([key, cat]) => {
                 const isSelected = category === key;
                 return (
@@ -186,16 +193,17 @@ const EventFormModal = ({ isOpen, onClose, onSave, editingEvent }) => {
                     style={{
                       display: 'flex',
                       alignItems: 'center',
-                      gap: '0.4rem',
-                      padding: '0.5rem 0.65rem',
-                      fontSize: '0.8rem',
+                      gap: '0.35rem',
+                      padding: '0.45rem 0.6rem',
+                      fontSize: '0.775rem',
                       fontWeight: '600',
                       borderRadius: 'var(--radius-md)',
                       border: isSelected ? `2px solid ${cat.defaultColor}` : '1px solid var(--border-glass)',
                       background: isSelected ? cat.bg : 'rgba(0, 0, 0, 0.25)',
                       color: isSelected ? '#ffffff' : 'var(--text-secondary)',
                       cursor: 'pointer',
-                      transition: 'all 0.15s ease'
+                      transition: 'all 0.15s ease',
+                      justifyContent: 'center'
                     }}
                   >
                     <span>{cat.emoji}</span>
@@ -219,15 +227,16 @@ const EventFormModal = ({ isOpen, onClose, onSave, editingEvent }) => {
                   key={preset.hex}
                   onClick={() => setColor(preset.hex)}
                   style={{
-                    width: '30px',
-                    height: '30px',
+                    width: '28px',
+                    height: '28px',
                     borderRadius: '50%',
                     backgroundColor: preset.hex,
                     border: color === preset.hex ? '3px solid #ffffff' : '2px solid transparent',
                     boxShadow: color === preset.hex ? `0 0 10px ${preset.hex}` : 'none',
                     cursor: 'pointer',
                     transition: 'transform 0.15s ease',
-                    transform: color === preset.hex ? 'scale(1.15)' : 'scale(1)'
+                    transform: color === preset.hex ? 'scale(1.15)' : 'scale(1)',
+                    flexShrink: 0
                   }}
                   title={preset.name}
                 />
@@ -237,12 +246,13 @@ const EventFormModal = ({ isOpen, onClose, onSave, editingEvent }) => {
                 value={color}
                 onChange={(e) => setColor(e.target.value)}
                 style={{
-                  width: '32px',
-                  height: '32px',
+                  width: '30px',
+                  height: '30px',
                   border: 'none',
                   borderRadius: '50%',
                   cursor: 'pointer',
-                  background: 'transparent'
+                  background: 'transparent',
+                  flexShrink: 0
                 }}
                 title="Custom color"
               />
@@ -268,7 +278,7 @@ const EventFormModal = ({ isOpen, onClose, onSave, editingEvent }) => {
             <div style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '0.4rem',
+              gap: '0.35rem',
               marginTop: '0.45rem',
               flexWrap: 'wrap'
             }}>
@@ -315,15 +325,18 @@ const EventFormModal = ({ isOpen, onClose, onSave, editingEvent }) => {
           </div>
 
           {/* Form Actions */}
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'flex-end',
-            gap: '0.75rem',
-            marginTop: '1.5rem',
-            borderTop: '1px solid var(--border-glass)',
-            paddingTop: '1.25rem'
-          }}>
+          <div
+            className="modal-actions"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'flex-end',
+              gap: '0.75rem',
+              marginTop: '1.5rem',
+              borderTop: '1px solid var(--border-glass)',
+              paddingTop: '1.25rem'
+            }}
+          >
             <button
               type="button"
               onClick={onClose}

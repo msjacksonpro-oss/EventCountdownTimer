@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { calculateTimeLeft, formatDateForDisplay, calculateProgress, CATEGORIES } from '../utils/timeUtils';
 import { triggerConfetti, triggerBigCelebration } from './ConfettiCelebration';
-import { Sparkles, Calendar, Edit3, Share2, Flame, PartyPopper } from 'lucide-react';
+import { Calendar, Edit3, Share2, Flame, PartyPopper } from 'lucide-react';
 
 const SpotlightEvent = ({ event, onEdit }) => {
   const [timeLeft, setTimeLeft] = useState(() => calculateTimeLeft(event?.target_date));
@@ -20,7 +20,7 @@ const SpotlightEvent = ({ event, onEdit }) => {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [event?.target_date]);
+  }, [event?.target_date, event]);
 
   if (!event) return null;
 
@@ -39,12 +39,8 @@ const SpotlightEvent = ({ event, onEdit }) => {
 
   return (
     <div
-      className="glass-panel"
+      className="glass-panel spotlight-card"
       style={{
-        position: 'relative',
-        overflow: 'hidden',
-        padding: '2rem',
-        marginBottom: '2.5rem',
         border: `1px solid ${accentColor}44`,
         background: `linear-gradient(135deg, ${accentColor}15 0%, rgba(15, 23, 42, 0.9) 60%)`,
         boxShadow: `0 12px 35px -8px ${accentColor}33`,
@@ -64,18 +60,10 @@ const SpotlightEvent = ({ event, onEdit }) => {
         borderRadius: '50%'
       }} />
 
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        flexWrap: 'wrap',
-        gap: '1.5rem',
-        position: 'relative',
-        zIndex: 1
-      }}>
+      <div className="spotlight-layout">
         {/* Left info column */}
-        <div style={{ flex: '1 1 350px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.75rem' }}>
+        <div className="spotlight-info">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
             <span style={{
               display: 'inline-flex',
               alignItems: 'center',
@@ -90,7 +78,7 @@ const SpotlightEvent = ({ event, onEdit }) => {
               color: '#ffffff',
               border: `1px solid ${accentColor}66`
             }}>
-              <Flame size={14} style={{ color: '#f59e0b' }} />
+              <Flame size={14} style={{ color: '#f59e0b', flexShrink: 0 }} />
               Next Major Milestone
             </span>
 
@@ -111,12 +99,13 @@ const SpotlightEvent = ({ event, onEdit }) => {
             </span>
           </div>
 
-          <h2 style={{
+          <h2 className="spotlight-title" style={{
             fontSize: '2rem',
             fontWeight: '800',
             lineHeight: 1.2,
             marginBottom: '0.5rem',
-            color: '#ffffff'
+            color: '#ffffff',
+            wordBreak: 'break-word'
           }}>
             {event.title}
           </h2>
@@ -127,7 +116,8 @@ const SpotlightEvent = ({ event, onEdit }) => {
               color: 'var(--text-secondary)',
               marginBottom: '1rem',
               maxWidth: '550px',
-              lineHeight: 1.5
+              lineHeight: 1.5,
+              wordBreak: 'break-word'
             }}>
               {event.description}
             </p>
@@ -144,14 +134,14 @@ const SpotlightEvent = ({ event, onEdit }) => {
               display: 'flex',
               alignItems: 'center',
               gap: '0.4rem',
-              fontSize: '0.875rem',
+              fontSize: '0.85rem',
               color: 'var(--text-muted)'
             }}>
-              <Calendar size={16} />
+              <Calendar size={15} style={{ flexShrink: 0 }} />
               <span>Target: <strong style={{ color: 'var(--text-primary)' }}>{formatDateForDisplay(event.target_date)}</strong></span>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <div className="spotlight-actions-row" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
               <button
                 onClick={() => onEdit(event)}
                 className="btn btn-secondary"
@@ -183,20 +173,15 @@ const SpotlightEvent = ({ event, onEdit }) => {
         </div>
 
         {/* Right Big Live Countdown Digits */}
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: '0.75rem',
-          flex: '0 0 auto'
-        }}>
+        <div className="spotlight-countdown-col">
           {timeLeft.isExpired ? (
             <div style={{
               background: 'rgba(239, 68, 68, 0.15)',
               border: '1px solid rgba(239, 68, 68, 0.3)',
               borderRadius: 'var(--radius-md)',
               padding: '1.25rem 2rem',
-              textAlign: 'center'
+              textAlign: 'center',
+              width: '100%'
             }}>
               <span style={{ fontSize: '2rem' }}>🎉</span>
               <h3 style={{ fontSize: '1.25rem', color: '#f87171', fontWeight: '800' }}>
@@ -207,45 +192,45 @@ const SpotlightEvent = ({ event, onEdit }) => {
               </p>
             </div>
           ) : (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-              <div className="timer-box" style={{ minWidth: '85px', padding: '0.9rem 0.75rem' }}>
-                <span className="timer-digits" style={{ fontSize: '2.5rem', color: '#ffffff' }}>
+            <div className="spotlight-timer-row">
+              <div className="timer-box spotlight-timer-box">
+                <span className="spotlight-digits" style={{ color: '#ffffff' }}>
                   {pad(timeLeft.days)}
                 </span>
-                <span className="timer-label" style={{ fontSize: '0.75rem' }}>Days</span>
+                <span className="timer-label">Days</span>
               </div>
 
-              <span style={{ fontSize: '1.75rem', fontWeight: '800', color: accentColor }}>:</span>
+              <span className="spotlight-colon" style={{ color: accentColor }}>:</span>
 
-              <div className="timer-box" style={{ minWidth: '85px', padding: '0.9rem 0.75rem' }}>
-                <span className="timer-digits" style={{ fontSize: '2.5rem', color: '#ffffff' }}>
+              <div className="timer-box spotlight-timer-box">
+                <span className="spotlight-digits" style={{ color: '#ffffff' }}>
                   {pad(timeLeft.hours)}
                 </span>
-                <span className="timer-label" style={{ fontSize: '0.75rem' }}>Hours</span>
+                <span className="timer-label">Hours</span>
               </div>
 
-              <span style={{ fontSize: '1.75rem', fontWeight: '800', color: accentColor }}>:</span>
+              <span className="spotlight-colon" style={{ color: accentColor }}>:</span>
 
-              <div className="timer-box" style={{ minWidth: '85px', padding: '0.9rem 0.75rem' }}>
-                <span className="timer-digits" style={{ fontSize: '2.5rem', color: '#ffffff' }}>
+              <div className="timer-box spotlight-timer-box">
+                <span className="spotlight-digits" style={{ color: '#ffffff' }}>
                   {pad(timeLeft.minutes)}
                 </span>
-                <span className="timer-label" style={{ fontSize: '0.75rem' }}>Minutes</span>
+                <span className="timer-label">Minutes</span>
               </div>
 
-              <span style={{ fontSize: '1.75rem', fontWeight: '800', color: accentColor }}>:</span>
+              <span className="spotlight-colon" style={{ color: accentColor }}>:</span>
 
-              <div className="timer-box ticking-second" style={{ minWidth: '85px', padding: '0.9rem 0.75rem', borderColor: accentColor }}>
-                <span className="timer-digits" style={{ fontSize: '2.5rem', color: accentColor }}>
+              <div className="timer-box ticking-second spotlight-timer-box" style={{ borderColor: accentColor }}>
+                <span className="spotlight-digits" style={{ color: accentColor }}>
                   {pad(timeLeft.seconds)}
                 </span>
-                <span className="timer-label" style={{ fontSize: '0.75rem', color: accentColor }}>Seconds</span>
+                <span className="timer-label" style={{ color: accentColor }}>Seconds</span>
               </div>
             </div>
           )}
 
           {/* Progress bar info */}
-          <div style={{ width: '100%', maxWidth: '380px' }}>
+          <div style={{ width: '100%', maxWidth: '440px', marginTop: '0.25rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.35rem' }}>
               <span>Timeline Progress</span>
               <span>{progress}% Elapsed</span>

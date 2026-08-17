@@ -74,8 +74,10 @@ const Register = () => {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: '1.5rem',
-      position: 'relative'
+      padding: '1rem',
+      position: 'relative',
+      overflow: 'hidden',
+      width: '100%'
     }}>
       {/* Background glow */}
       <div style={{
@@ -92,15 +94,15 @@ const Register = () => {
       <div className="glass-panel" style={{
         width: '100%',
         maxWidth: '460px',
-        padding: '2.5rem 2rem',
+        padding: 'clamp(1.5rem, 5vw, 2.5rem)',
         position: 'relative',
         zIndex: 1
       }}>
         {/* Brand Header */}
-        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+        <div style={{ textAlign: 'center', marginBottom: '1.75rem' }}>
           <div style={{
-            width: '56px',
-            height: '56px',
+            width: '52px',
+            height: '52px',
             borderRadius: '16px',
             background: 'linear-gradient(135deg, #8b5cf6, #ec4899)',
             display: 'inline-flex',
@@ -108,14 +110,14 @@ const Register = () => {
             justifyContent: 'center',
             color: '#fff',
             boxShadow: '0 0 24px rgba(139, 92, 246, 0.5)',
-            marginBottom: '1rem'
+            marginBottom: '0.85rem'
           }}>
-            <Clock size={32} className="ticking-second" />
+            <Clock size={28} className="ticking-second" />
           </div>
-          <h1 style={{ fontSize: '1.75rem', fontWeight: '800', color: '#ffffff', marginBottom: '0.35rem' }}>
+          <h1 style={{ fontSize: '1.6rem', fontWeight: '800', color: '#ffffff', marginBottom: '0.35rem' }}>
             Create Account
           </h1>
-          <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
             Start counting down to your most anticipated events
           </p>
         </div>
@@ -199,7 +201,7 @@ const Register = () => {
             type="submit"
             disabled={loading}
             className="btn btn-primary"
-            style={{ width: '100%', marginTop: '0.75rem', padding: '0.75rem', background: 'linear-gradient(135deg, #8b5cf6, #ec4899)' }}
+            style={{ width: '100%', marginTop: '0.75rem', padding: '0.7rem', background: 'linear-gradient(135deg, #8b5cf6, #ec4899)' }}
           >
             {loading ? 'Creating Account...' : 'Sign Up & Get Started'}
             <ArrowRight size={16} />
@@ -207,7 +209,7 @@ const Register = () => {
         </form>
 
         {/* Login Link */}
-        <div style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+        <div style={{ textAlign: 'center', marginTop: '1.35rem', fontSize: '0.825rem', color: 'var(--text-secondary)' }}>
           Already have an account?{' '}
           <Link to="/login" style={{ color: 'var(--accent-primary)', fontWeight: '600', textDecoration: 'underline' }}>
             Sign In here

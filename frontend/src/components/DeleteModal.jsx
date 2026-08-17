@@ -1,5 +1,5 @@
 import React from 'react';
-import { AlertTriangle, Trash2, X } from 'lucide-react';
+import { AlertTriangle, Trash2 } from 'lucide-react';
 
 const DeleteModal = ({ isOpen, onClose, onConfirm, eventTitle, loading }) => {
   if (!isOpen) return null;
@@ -9,17 +9,17 @@ const DeleteModal = ({ isOpen, onClose, onConfirm, eventTitle, loading }) => {
       <div
         className="modal-container"
         onClick={(e) => e.stopPropagation()}
-        style={{ maxWidth: '440px', padding: '1.75rem' }}
+        style={{ maxWidth: '440px', padding: '1.5rem' }}
       >
         <div style={{
           display: 'flex',
           alignItems: 'center',
-          gap: '1rem',
+          gap: '0.85rem',
           marginBottom: '1rem'
         }}>
           <div style={{
-            width: '44px',
-            height: '44px',
+            width: '42px',
+            height: '42px',
             borderRadius: '12px',
             background: 'rgba(239, 68, 68, 0.15)',
             color: '#ef4444',
@@ -28,28 +28,29 @@ const DeleteModal = ({ isOpen, onClose, onConfirm, eventTitle, loading }) => {
             justifyContent: 'center',
             flexShrink: 0
           }}>
-            <AlertTriangle size={24} />
+            <AlertTriangle size={22} />
           </div>
           <div>
-            <h3 style={{ fontSize: '1.2rem', fontWeight: '800', color: '#ffffff' }}>
+            <h3 style={{ fontSize: '1.15rem', fontWeight: '800', color: '#ffffff' }}>
               Delete Event?
             </h3>
-            <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+            <p style={{ fontSize: '0.775rem', color: 'var(--text-muted)' }}>
               This action cannot be undone.
             </p>
           </div>
         </div>
 
         <p style={{
-          fontSize: '0.9rem',
+          fontSize: '0.875rem',
           color: 'var(--text-secondary)',
           marginBottom: '1.5rem',
-          lineHeight: 1.5
+          lineHeight: 1.5,
+          wordBreak: 'break-word'
         }}>
           Are you sure you want to delete <strong style={{ color: '#ffffff' }}>"{eventTitle}"</strong>? The countdown timer and history will be permanently removed.
         </p>
 
-        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem' }}>
+        <div className="modal-actions" style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem' }}>
           <button
             type="button"
             onClick={onClose}
@@ -63,7 +64,7 @@ const DeleteModal = ({ isOpen, onClose, onConfirm, eventTitle, loading }) => {
             onClick={onConfirm}
             className="btn btn-danger"
             disabled={loading}
-            style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem' }}
           >
             <Trash2 size={16} />
             <span>{loading ? 'Deleting...' : 'Yes, Delete'}</span>

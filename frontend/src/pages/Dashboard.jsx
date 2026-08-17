@@ -8,7 +8,7 @@ import EventCard from '../components/EventCard';
 import EventFormModal from '../components/EventFormModal';
 import DeleteModal from '../components/DeleteModal';
 import { calculateTimeLeft } from '../utils/timeUtils';
-import { Plus, Sparkles, Calendar, Search } from 'lucide-react';
+import { Plus, Sparkles, Calendar } from 'lucide-react';
 
 const Dashboard = () => {
   const [events, setEvents] = useState([]);
@@ -143,7 +143,7 @@ const Dashboard = () => {
   }, [events, selectedCategory, statusFilter, searchQuery, sortBy]);
 
   return (
-    <div style={{ minHeight: '100vh', paddingBottom: '4rem' }}>
+    <div style={{ minHeight: '100vh', paddingBottom: '3.5rem', width: '100%' }}>
       <Navbar
         onOpenAddModal={() => {
           setEditingEvent(null);
@@ -153,7 +153,7 @@ const Dashboard = () => {
         isSeeding={isSeeding}
       />
 
-      <main style={{ maxWidth: '1360px', margin: '0 auto', padding: '0 1.5rem' }}>
+      <main className="dashboard-container">
         {/* Spotlight Hero Banner for nearest event */}
         {spotlightEvent && (
           <SpotlightEvent
@@ -185,7 +185,7 @@ const Dashboard = () => {
 
         {/* Events Grid / List Display */}
         {loading ? (
-          <div style={{ textAlign: 'center', padding: '4rem 2rem' }}>
+          <div style={{ textAlign: 'center', padding: '4rem 1.5rem' }}>
             <div style={{
               width: '40px',
               height: '40px',
@@ -195,14 +195,14 @@ const Dashboard = () => {
               margin: '0 auto 1rem',
               animation: 'spin 0.8s linear infinite'
             }} />
-            <p style={{ color: 'var(--text-muted)' }}>Loading your countdown timers...</p>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Loading your countdown timers...</p>
           </div>
         ) : filteredEvents.length === 0 ? (
           /* Empty State */
           <div
             className="glass-panel"
             style={{
-              padding: '4rem 2rem',
+              padding: '3.5rem 1.5rem',
               textAlign: 'center',
               display: 'flex',
               flexDirection: 'column',
@@ -211,9 +211,9 @@ const Dashboard = () => {
             }}
           >
             <div style={{
-              width: '64px',
-              height: '64px',
-              borderRadius: '20px',
+              width: '60px',
+              height: '60px',
+              borderRadius: '18px',
               background: 'rgba(99, 102, 241, 0.15)',
               color: 'var(--accent-primary)',
               display: 'flex',
@@ -221,13 +221,13 @@ const Dashboard = () => {
               justifyContent: 'center',
               marginBottom: '1.25rem'
             }}>
-              <Calendar size={32} />
+              <Calendar size={30} />
             </div>
 
-            <h3 style={{ fontSize: '1.5rem', fontWeight: '800', color: '#ffffff', marginBottom: '0.5rem' }}>
+            <h3 style={{ fontSize: '1.35rem', fontWeight: '800', color: '#ffffff', marginBottom: '0.5rem' }}>
               {events.length === 0 ? 'No Event Countdowns Yet' : 'No Matching Events Found'}
             </h3>
-            <p style={{ color: 'var(--text-secondary)', maxWidth: '420px', marginBottom: '1.5rem', fontSize: '0.925rem' }}>
+            <p style={{ color: 'var(--text-secondary)', maxWidth: '420px', marginBottom: '1.5rem', fontSize: '0.9rem' }}>
               {events.length === 0
                 ? 'Create your first countdown timer or load our sample events to see live ticking cards!'
                 : 'Try adjusting your search query, status filters, or category selection.'}
@@ -259,19 +259,7 @@ const Dashboard = () => {
           </div>
         ) : (
           /* Event Cards Container */
-          <div style={
-            viewMode === 'grid'
-              ? {
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
-                  gap: '1.5rem',
-                }
-              : {
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '1rem',
-                }
-          }>
+          <div className={viewMode === 'grid' ? 'events-grid-container' : 'events-list-container'}>
             {filteredEvents.map((event) => (
               <EventCard
                 key={event.id}
